@@ -21,16 +21,6 @@ void AdminQ::resetTimers() {
 }
 
 void AdminQ::changeLevel() { //Para transiciones
-/*   algoritmo 1 que no funciona cuando hay un proceso en la cola 3 he ingresas uno nuevo.
-    flushToVector(currentLevel); //Movemos todo al vector temporal
-    if(currentLevel != 3) {
-        currentLevel += 1;
-    } else {
-        currentLevel = 3;
-    }
-    resetTimers();
-    flushToQueue(currentLevel); //Movemos todo a la cola del siguiente nivel */
-
     int anotherLevel = currentLevel;
     for(int i = 0; i < currentLevel; i++) { // check 0-current
         if(!rQ[i].empty()) {
@@ -44,7 +34,6 @@ void AdminQ::changeLevel() { //Para transiciones
             nextLevel = i;
         }
     }
-
 /*     deberiamos chequear si la cola siguiente tiene procesos, en ese caso, chequeamos clvl +1, si los tiene,
         pasamos esa cola al vector, luego la cola actual al vector, y luego movemos el vector a la cola+1
     para anotherlvl = currentlevel -> submimos un lvl pasando la cola restante al vector y devolviendola a la cola +1lvl
@@ -58,15 +47,23 @@ void AdminQ::changeLevel() { //Para transiciones
         }
         flushToQueue(currentLevel);
     }else if (anotherLevel < currentLevel) {
-        flushToQueue(currentLevel); //Le devolvemos los procesos si es que sacamos alguno
+        flushToQueue(currentLevel); //Le devolvemos los procesos al actual si es que sacamos alguno
         currentLevel = anotherLevel;
     } else if (nextLevel > currentLevel) {
         if(currentLevel != 3) {
-            if(!rQ[nextLevel].empty()) {
-                flushToVector(nextLevel);
+            if(rQ[currentLevel+1].empty()) {
+                flushToVector(currentLevel);
+                currentLevel += 1;
             }
-            flushToVector(currentLevel);
-            currentLevel = nextLevel;
+            else if(!rQ[nextLevel].empty()) {
+                // huh
+                flushToVector(currentLevel); // Movemos los procesos restantes de la cola al vector
+                flushToQueue(currentLevel); // Movemos de vuelta a la cola para mantener el orden del siguiente nivel
+
+                flushToVector(nextLevel); // Mover los procesos de la cola objetivo 
+                flushToVector(currentLevel); // Unir con el vector temporal
+                currentLevel = nextLevel;
+            }
             flushToQueue(currentLevel);
         }
     }
@@ -112,15 +109,16 @@ void AdminQ::flushToQueue(int Lvl) {
 
 void AdminQ::handleInput(float inArrival) {
     if(num_process == 10) {
-        cout << "No se puede crear más de 10 procesos, intente cuando haya finalizado un proceso" << endl;
+        cout << "No se puede crear mas de 10 procesos, intente cuando haya finalizado un proceso" << endl;
         system("pause");
+        return;
     }
     string inID, inTurntime, inPriority;
     int iID, iPriority;
     float iTtime;
     cout << "Ingrese ID de proceso: ";
     cin >> inID;
-    cout << "Ingrese tiempo de ráfaga del proceso: ";
+    cout << "Ingrese tiempo de rafaga del proceso: ";
     cin >> inTurntime;
     cout << "Ingrese prioridad del proceso: ";
     cin >> inPriority;
@@ -199,7 +197,6 @@ void AdminQ::updateProcess(float time) {
     } else if (checkSubTime()) {
         tempQ.push_back(rQ[currentLevel].front());
         rQ[currentLevel].pop();
-        //cout << rQ[currentLevel].front().getID();
         if(rQ[currentLevel].empty()) {
             changeLevel();
         }
@@ -218,7 +215,7 @@ string AdminQ::getProcessList(int Lvl) {
     string ret_val = "";
     std::ostringstream oss;
     if(qq.empty()) {
-        return "Queue is empty";
+        return "Queue vacio";
     }
     while(!qq.empty()) {
         oss << qq.front().getID();
@@ -237,7 +234,7 @@ string AdminQ::debugTempVector () {
     ostringstream oss;
     string ret_val = "";
     if(tempQ.empty()) {
-        return "Vec is empty";
+        return "No hay procesos";
     }
     for(int i = 0; i < tempQ.size(); i++) {
         oss << tempQ[i].getID();
@@ -250,11 +247,11 @@ string AdminQ::debugTempVector () {
     return ret_val;
 }
 
-string AdminQ::debugLvlQ(int Lvl) {
-}
-
 void AdminQ::debug() {
-    string current = getProcessList(currentLevel);
+    string q1 = getProcessList(0);
+    string q2 = getProcessList(1);
+    string q3 = getProcessList(2);
+    string q4 = getProcessList(3);
     float ptime = 0.f;
     if(!rQ[currentLevel].empty()) {
        ptime = rQ[currentLevel].front().getTimeleft();
@@ -266,9 +263,14 @@ void AdminQ::debug() {
         currentProcess = oss.str();
     }
     string vectorinfo = debugTempVector();
-    cout << "a: " << adminTime << "\ts: " << subTime
-        << "\tprocessnum: " << num_process << "\nlevel: " << currentLevel << endl
-        << "Queue:" << current << endl << "current: [" << currentProcess << "]\t" <<"processtime: " << ptime << endl
-        << vectorinfo << "\n-----------------------------\n\n";
+    cout << "Tiempo admin: " << adminTime << "\tTiempo Quanto: " << subTime
+        << "\tCtd. Procesos: " << num_process << "\n\nNivel actual: " << currentLevel << endl
+        << "Queue 1 (R-R q:2)\t: " << q1 << endl 
+        << "Queue 2 (R-R q:4)\t: " << q2 << endl 
+        << "Queue 3 (PRIORITY)\t: " << q3 << endl 
+        << "Queue 4 (FCFS)\t\t: " << q4 << endl 
+        << "Proceso Actual: [" << currentProcess << "]\t" <<"Tiempo restante: " << ptime << endl
+        << "-----------------------------\n"
+        << "Buffer: " << vectorinfo << endl;
     oss.str("");
 }
