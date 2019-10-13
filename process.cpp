@@ -31,11 +31,11 @@ void Process::print() {
 
 bool Process::isDone(){ 
     if(timeleft == 0.f) {
-        std::cout << "Process " << ID << " finished" << std::endl;
+        //std::cout << "Process " << ID << " finished" << std::endl;
         return true; 
     } else if (timeleft <= 0.f) { 
         timeleft = 0.f; 
-        std::cout << "Process " << ID << " finished" << std::endl;
+        //std::cout << "Process " << ID << " finished" << std::endl;
         return true;
     } else 
         return false; 

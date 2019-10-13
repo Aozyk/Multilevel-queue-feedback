@@ -14,18 +14,17 @@ class AdminQ {
         const float sub2TimeConstraint = 4.0f;
         int currentLevel = 0; //starts at 0.
         std::queue<Process> rQ[4];
-        std::vector<Process> tempQ;
-        bool running = true;
             /* 
             * 0 = round-robin con q = 2
             * 1 = round-robin con q = 4
             * 2 = priority apropiativo
             * 3 = FCFS
             */
+
+        std::vector<Process> tempQ; //Búffer
+        bool running = true;
         float adminTime; //Tiempo actual de la admin queue
         float subTime; // Tiempo actual de la "sub" cola. (necesario para el round robin de las colas)
-
-        int checkActiveQ(); //Checke las colas para ver cual es la de menor nivel con procesos
 
         void changeLevel(); // Cambiar de colas
         void resetTimers(); 
@@ -37,7 +36,6 @@ class AdminQ {
         bool checkAdminTime(); // Retorna true si está al limite de tiempo
         bool checkSubTime(); // Retorna true si está al limite de tiempo
 
-        std::string debugLvlQ(int Lvl);
         std::string debugTempVector();
         std::string getProcessList(int Lvl);
 
