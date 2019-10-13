@@ -19,7 +19,7 @@ Al presionar una tecla, se genera una interrupción por lo que el sistema no est
 ### Instrucciones de uso
 Al presionar una tecla trae el menu para agregar un nuevo proceso pidiendo al usuario que ingrese los datos requeridos por teclado
 - ID (entero)
-- Tiempo de rafaga (decimal)
+- Tiempo de rafaga (decimal o entero)
 - Prioridad (entero) 
 
 ### Compilación
