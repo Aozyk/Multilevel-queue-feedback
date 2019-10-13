@@ -24,7 +24,16 @@ Al presionar una tecla trae el menu para agregar un nuevo proceso pidiendo al us
 
 ### Compilación
 Utilizar C++14 (GNU)
-Comando:
+
+Debug:
 ```
-g++ -std=gnu++14 -o multiqueue.exe main.cpp adminqueue.cpp process.cpp
+g++ -std=gnu++14 -g -Wall -Wpedantic -o multiqueue.exe main.cpp adminqueue.cpp process.cpp
+```
+
+Release:
+```
+g++ -std=gnu++14 -static -O3 -o bin/multiqueue.exe main.cpp adminqueue.cpp process.cpp
+g++ -std=gnu++14 -static -c main.cpp -o bin/main.o
+g++ -std=gnu++14 -static -c adminqueue.cpp -o bin/adminqueue.o
+g++ -std=gnu++14 -static -c process.cpp -o bin/process.o
 ```
