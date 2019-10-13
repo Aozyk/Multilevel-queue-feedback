@@ -12,7 +12,7 @@ Trabajo para la asignatura de Sistemas Operativos 2019-2 de la Universidad Tecno
 ### Aclaraciones
 El búfer corresponde a una EDD que permite marcar los procesos que ya han cumplido su tiempo en la cola y están esperando para ingresar a la cola siguiente.
 
-El nivel corresponde a la cola activa, siendo 0 la primera cola y 3 la última.
+El nivel corresponde a la cola activa, siendo 1 la primera cola y 4 la última.
 
 Al presionar una tecla, se genera una interrupción por lo que el sistema no está contando el tiempo de los procesos en las colas respectivas.
 
