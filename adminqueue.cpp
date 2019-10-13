@@ -38,7 +38,7 @@ void AdminQ::changeLevel() { //Para transiciones
         pasamos esa cola al vector, luego la cola actual al vector, y luego movemos el vector a la cola+1
     para anotherlvl = currentlevel -> submimos un lvl pasando la cola restante al vector y devolviendola a la cola +1lvl
     para anotherlvl < currentlevle -> vamos al nivel encotnrado pero no nos llevamos los procesos
-    para antoherlvl > currentlevel -> avanzamos 1 lvl de manera normal tomando la precaución de arriba. */
+    para nextlvl > currentlevel -> avanzamos 1 lvl de manera normal tomando la precaución de arriba. */
 
     if(anotherLevel == currentLevel && nextLevel == currentLevel) {
         flushToVector(currentLevel);
@@ -109,13 +109,11 @@ void AdminQ::flushToQueue(int Lvl) {
 
 void AdminQ::handleInput(float inArrival) {
     if(num_process == 10) {
-        cout << "No se puede crear mas de 10 procesos, intente cuando haya finalizado un proceso" << endl;
+        cout << "No se puede crear mas de 10 procesos, intente denuevo cuando haya finalizado un proceso" << endl;
         system("pause");
         return;
     }
     string inID, inTurntime, inPriority;
-    int iID, iPriority;
-    float iTtime;
     cout << "Ingrese ID de proceso: ";
     cin >> inID;
     cout << "Ingrese tiempo de rafaga del proceso: ";
@@ -264,7 +262,7 @@ void AdminQ::debug() {
     }
     string vectorinfo = debugTempVector();
     cout << "Tiempo admin: " << adminTime << "\tTiempo Quanto: " << subTime
-        << "\tCtd. Procesos: " << num_process << "\n\nNivel actual: " << currentLevel << endl
+        << "\tCtd. Procesos: " << num_process << "\n\nNivel actual: " << currentLevel+1 << endl
         << "Queue 1 (R-R q:2)\t: " << q1 << endl 
         << "Queue 2 (R-R q:4)\t: " << q2 << endl 
         << "Queue 3 (PRIORITY)\t: " << q3 << endl 
